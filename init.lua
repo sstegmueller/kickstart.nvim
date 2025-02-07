@@ -317,8 +317,9 @@ require('lazy').setup({
       -- Document existing key chains
       spec = {
         { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
-        { '<leader>e', group = '[E]xplorer' },
         { '<leader>d', group = '[D]ocument' },
+        { '<leader>e', group = '[E]xplorer' },
+        { '<leader>l', group = '[L]azygit' },
         { '<leader>r', group = '[R]ename' },
         { '<leader>s', group = '[S]earch' },
         { '<leader>w', group = '[W]orkspace' },
