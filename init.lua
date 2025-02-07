@@ -317,7 +317,7 @@ require('lazy').setup({
       -- Document existing key chains
       spec = {
         { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
-        { '<leader>d', group = '[D]ocument' },
+        { '<leader>d', group = '[D]ebug' },
         { '<leader>e', group = '[E]xplorer' },
         { '<leader>l', group = '[L]azygit' },
         { '<leader>r', group = '[R]ename' },
@@ -401,7 +401,7 @@ require('lazy').setup({
             require('telescope.themes').get_dropdown(),
           },
           project = {
-            base_dirs = { '~/dev' }, -- Customize your project directories
+            base_dirs = { '~/dev', '~/.config' }, -- Customize your project directories
             hidden_files = true,
             theme = 'dropdown',
             order_by = 'recent',
@@ -638,7 +638,7 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -985,7 +985,7 @@ require('lazy').setup({
   --
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
