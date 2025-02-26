@@ -371,6 +371,13 @@ require('lazy').setup({
 
       -- Add the telescope project extension
       { 'nvim-telescope/telescope-project.nvim' },
+      {
+        'isak102/telescope-git-file-history.nvim',
+        dependencies = {
+          'nvim-lua/plenary.nvim',
+          'tpope/vim-fugitive',
+        },
+      },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -441,6 +448,11 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sp', function()
         require('telescope').extensions.project.project()
       end, { desc = '[S]earch [P]roject' })
+
+      -- Add keybinding for git history
+      vim.keymap.set('n', '<leader>sg', function()
+        require('telescope').extensions.git_file_history.git_file_history()
+      end, { desc = '[S]search Git [H]istory' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
