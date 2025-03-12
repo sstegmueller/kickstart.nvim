@@ -24,6 +24,12 @@ return {
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
     'mfussenegger/nvim-dap-python',
+    'antoinemadec/FixCursorHold.nvim',
+    'nvim-treesitter/nvim-treesitter',
+    'olimorris/neotest-phpunit',
+    'nvim-neotest/neotest',
+    'nvim-neotest/nvim-nio',
+    'nvim-lua/plenary.nvim',
   },
   keys = {
     -- Basic debugging keymaps, feel free to change to your liking!
@@ -136,6 +142,26 @@ return {
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
+
+    dap.adapters.php = {
+      type = 'executable',
+      command = 'php-debug-adapter',
+    }
+
+    dap.configurations.php = {
+      {
+        type = 'php',
+        request = 'launch',
+        name = 'Portal',
+        port = 9003,
+        pathMappings = {
+          ['/app'] = '${workspaceFolder}',
+        },
+        proxy = {
+          key = 'VSCODE',
+        }
+      },
+    }
 
     -- Install golang specific config
     require('dap-go').setup {
