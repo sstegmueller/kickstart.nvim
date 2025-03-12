@@ -197,13 +197,9 @@ vim.keymap.set('n', '<C-k>', '3k', { desc = 'Move 5 lines up' })
 vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'Scroll down and center' })
 vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Scroll up and center' })
 
--- Map 'p' to paste only copied content (yanked content)
-vim.keymap.set('n', 'p', function()
-  vim.cmd 'normal! "0p'
-end, { noremap = true, silent = true })
+-- Search and replace visual selection
+vim.keymap.set('v', '<C-r>', '"hy:%s/<C-r>h//gc<left><left><left>', { desc = 'Search and replace visual selection' })
 
--- Map 'ü' to paste cut and copied content (normal paste behavior)
-vim.keymap.set('n', 'ü', 'p', { noremap = true, silent = true })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
