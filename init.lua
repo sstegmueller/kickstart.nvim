@@ -243,38 +243,7 @@ require('lazy').setup({
   'tpope/vim-sleuth',   -- Detect tabstop and shiftwidth automatically
   'github/copilot.vim', -- Github copilot
 
-  {
-    'folke/noice.nvim',
-    event = 'VeryLazy',
-    dependencies = {
-      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-      'MunifTanjim/nui.nvim',
-      -- OPTIONAL:
-      --   `nvim-notify` is only needed, if you want to use the notification view.
-      --   If not available, we use `mini` as the fallback
-      'rcarriga/nvim-notify',
-    },
-    config = function()
-      require('noice').setup {
-        lsp = {
-          -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
-          override = {
-            ['vim.lsp.util.convert_input_to_markdown_lines'] = true,
-            ['vim.lsp.util.stylize_markdown'] = true,
-            ['cmp.entry.get_documentation'] = true, -- requires hrsh7th/nvim-cmp
-          },
-        },
-        -- you can enable a preset for easier configuration
-        presets = {
-          bottom_search = true,         -- use a classic bottom cmdline for search
-          command_palette = true,       -- position the cmdline and popupmenu together
-          long_message_to_split = true, -- long messages will be sent to a split
-          inc_rename = false,           -- enables an input dialog for inc-rename.nvim
-          lsp_doc_border = false,       -- add a border to hover docs and signature help
-        },
-      }
-    end,
-  },
+
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -515,70 +484,6 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
-    end,
-  },
-
-  -- Harpoon plugin for bookmarks
-  {
-    'ThePrimeagen/harpoon',
-    branch = 'harpoon2',
-    dependencies = { 'nvim-lua/plenary.nvim' },
-    config = function()
-      local harpoon = require 'harpoon'
-      harpoon.setup()
-
-      -- basic telescope configuration
-      local conf = require('telescope.config').values
-      local function toggle_telescope(harpoon_files)
-        local file_paths = {}
-        for _, item in ipairs(harpoon_files.items) do
-          table.insert(file_paths, item.value)
-        end
-
-        require('telescope.pickers')
-            .new({}, {
-              prompt_title = 'Harpoon',
-              finder = require('telescope.finders').new_table {
-                results = file_paths,
-              },
-              previewer = conf.file_previewer {},
-              sorter = conf.generic_sorter {},
-            })
-            :find()
-      end
-
-      vim.keymap.set('n', '<leader>sm', function()
-        toggle_telescope(harpoon:list())
-      end, { desc = '[S]earch [M]arks' })
-
-      vim.keymap.set('n', '<leader>ma', function()
-        harpoon:list():add()
-      end, { desc = '[M]ark [A]dd' })
-
-      vim.keymap.set('n', '<leader>m1', function()
-        harpoon:list():select(1)
-      end, { desc = '[M]ark 1' })
-      vim.keymap.set('n', '<leader>m2', function()
-        harpoon:list():select(2)
-      end, { desc = '[M]ark 2' })
-      vim.keymap.set('n', '<leader>m3', function()
-        harpoon:list():select(3)
-      end, { desc = '[M]ark 3' })
-      vim.keymap.set('n', '<leader>m4', function()
-        harpoon:list():select(4)
-      end, { desc = '[M]ark 4' })
-
-      -- Toggle previous & next buffers stored within Harpoon list
-      vim.keymap.set('n', '<leader>mp', function()
-        harpoon:list():prev()
-      end, { desc = '[M]ark [P]revious' })
-      vim.keymap.set('n', '<leader>mn', function()
-        harpoon:list():next()
-      end, { desc = '[M]ark [N]ext' })
-
-      vim.keymap.set('n', '<leader>mm', function()
-        harpoon.ui:toggle_quick_menu(harpoon:list())
-      end, { desc = '[M]ark [M]enu' })
     end,
   },
 
@@ -935,28 +840,6 @@ require('lazy').setup({
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
       },
-    },
-  },
-
-  -- Lazygit
-  {
-    'kdheepak/lazygit.nvim',
-    lazy = true,
-    cmd = {
-      'LazyGit',
-      'LazyGitConfig',
-      'LazyGitCurrentFile',
-      'LazyGitFilter',
-      'LazyGitFilterCurrentFile',
-    },
-    -- optional for floating window border decoration
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-    },
-    -- setting the keybinding for LazyGit with 'keys' is recommended in
-    -- order to load the plugin when the command is run for the first time
-    keys = {
-      { '<leader>lg', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
     },
   },
 
