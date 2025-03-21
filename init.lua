@@ -200,6 +200,9 @@ vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Scroll up and center' })
 -- Search and replace visual selection
 vim.keymap.set('v', '<C-r>', '"hy:%s/<C-r>h//gc<left><left><left>', { desc = 'Search and replace visual selection' })
 
+vim.keymap.set('n', '<leader>de', vim.diagnostic.open_float,
+  { noremap = true, silent = true, desc = 'Show diagnostic error' })
+
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -331,7 +334,7 @@ require('lazy').setup({
       -- Document existing key chains
       spec = {
         { '<leader>c', group = '[C]ode',                mode = { 'n', 'x' } },
-        { '<leader>d', group = '[D]ebug' },
+        { '<leader>d', group = '[D]iagnostics' },
         { '<leader>e', group = '[E]xplorer' },
         { '<leader>l', group = '[L]azygit' },
         { '<leader>m', group = '[M]ark' },
