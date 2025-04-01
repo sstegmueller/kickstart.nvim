@@ -163,8 +163,6 @@ vim.opt.scrolloff = 10
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
--- Diagnostic keymaps
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -200,8 +198,11 @@ vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Scroll up and center' })
 -- Search and replace visual selection
 vim.keymap.set('v', '<C-r>', '"hy:%s/<C-r>h//gc<left><left><left>', { desc = 'Search and replace visual selection' })
 
+-- Diagnostics
 vim.keymap.set('n', '<leader>de', vim.diagnostic.open_float,
-  { noremap = true, silent = true, desc = 'Show diagnostic error' })
+  { noremap = true, silent = true, desc = 'Show diagnostic [E]rror' })
+vim.keymap.set('n', '<leader>dq', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+
 
 
 -- [[ Basic Autocommands ]]
@@ -488,6 +489,20 @@ require('lazy').setup({
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
     end,
+  },
+
+  {
+    'nvim-telescope/telescope-live-grep-args.nvim',
+    keys = {
+      {
+        '<leader>sv',
+        function()
+          require('telescope-live-grep-args.shortcuts').grep_visual_selection()
+        end,
+        desc = 'Find by Grep (Visual)',
+        mode = 'v',
+      },
+    },
   },
 
   -- LSP Plugins
