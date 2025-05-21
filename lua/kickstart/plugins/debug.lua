@@ -161,6 +161,15 @@ return {
           key = 'VSCODE',
         }
       },
+      {
+        type = 'php',
+        request = 'launch',
+        name = 'CWS',
+        port = 9003,
+        pathMappings = {
+          ['/var/www/html/'] = '${workspaceFolder}/cws',
+        },
+      },
     }
 
     -- Install golang specific config
