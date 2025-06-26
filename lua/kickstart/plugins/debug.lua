@@ -62,6 +62,13 @@ return {
       desc = 'Debug: Step Out',
     },
     {
+      '<F4>',
+      function()
+        require('dap').set_exception_breakpoints({ "Warning", "Error", "Exception" })
+      end,
+      desc = 'Debug: Step Out',
+    },
+    {
       '<leader>b',
       function()
         require('dap').toggle_breakpoint()
