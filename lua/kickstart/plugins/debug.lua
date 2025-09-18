@@ -155,6 +155,14 @@ return {
       command = 'php-debug-adapter',
     }
 
+    require('dap-python').setup 'python3'
+
+    dap.adapters.python = {
+      type = 'server',
+      host = '127.0.0.1',
+      port = 5678,
+    }
+
     dap.configurations.php = {
       {
         type = 'php',
@@ -179,14 +187,24 @@ return {
       },
     }
 
-    -- Install golang specific config
-    require('dap-go').setup {
-      delve = {
-        -- On Windows delve must be run attached or it crashes.
-        -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
-        detached = vim.fn.has 'win32' == 0,
+    dap.configurations.python = {
+      {
+        type = 'python',
+        request = 'attach',
+        name = 'Python: Remote Attach',
+        connect = {
+          host = '127.0.0.1',
+          port = 5678,
+        },
+        mode = 'remote',
+        justMyCode = false,
+        pathMappings = {
+          {
+            localRoot = '${workspaceFolder}/daphne-synchronizer', -- your project path on host
+            remoteRoot = '/home/appuser',                         -- path inside Docker container
+          },
+        },
       },
     }
-    require('dap-python').setup 'python3'
   end,
 }
