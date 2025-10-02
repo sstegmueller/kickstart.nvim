@@ -851,7 +851,7 @@ require('lazy').setup({
       },
     },
     opts = {
-      notify_on_error = false,
+      notify_on_error = true,
       format_on_save = function(bufnr)
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
@@ -867,9 +867,18 @@ require('lazy').setup({
         end
       end,
       formatters_by_ft = {
-        -- Conform can also run multiple formatters sequentially
-        -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        php = { "php-cs-fixer" },
+      },
+      formatters = {
+        ["php-cs-fixer"] = {
+          command = "php-cs-fixer",
+          args = {
+            "fix",
+            "--rules=@PSR12", -- Formatting preset. Other presets are available, see the php-cs-fixer docs.
+            "$FILENAME",
+          },
+          stdin = false,
+        },
       },
     },
   },
