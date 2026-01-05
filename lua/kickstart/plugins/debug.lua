@@ -64,7 +64,7 @@ return {
     {
       '<F4>',
       function()
-        require('dap').set_exception_breakpoints({ "Warning", "Error", "Exception" })
+        require('dap').set_exception_breakpoints { 'Warning', 'Error', 'Exception' }
       end,
       desc = 'Debug: Step Out',
     },
@@ -132,6 +132,19 @@ return {
           disconnect = '⏏',
         },
       },
+
+      layouts = {
+        {
+          elements = { 'scopes', 'breakpoints', 'stacks', 'watches' },
+          position = 'right',
+          size = 50, -- columns
+        },
+        {
+          elements = { 'repl', 'console' },
+          position = 'bottom',
+          size = 12, -- lines
+        },
+      },
     }
 
     -- Change breakpoint icons
@@ -174,7 +187,7 @@ return {
         },
         proxy = {
           key = 'VSCODE',
-        }
+        },
       },
       {
         type = 'php',
@@ -201,7 +214,7 @@ return {
         pathMappings = {
           {
             localRoot = '${workspaceFolder}/daphne-synchronizer', -- your project path on host
-            remoteRoot = '/home/appuser',                         -- path inside Docker container
+            remoteRoot = '/home/appuser', -- path inside Docker container
           },
         },
       },
