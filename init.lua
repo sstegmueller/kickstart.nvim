@@ -784,7 +784,21 @@ require('lazy').setup({
             })
           end,
         },
-        phpactor = {},
+        phpactor = {
+          init_options = {
+            ['indexer.exclude_patterns'] = {
+              '/vendor/reactor',
+              '/vendor/**/Tests',
+              '/vendor/**/tests/**/*',
+              '/vendor/composer/**/*',
+              '/generated/**/*',
+              '/pub/static/**/*',
+              '/var/**/*',
+              '/dev/**/*',
+            },
+          },
+          root_markers = { 'composer.json', '.phpactor.json', '.phpactor.yml' },
+        },
         docker_compose_language_service = {},
         lua_ls = {
           -- cmd = { ... },
@@ -819,6 +833,7 @@ require('lazy').setup({
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
+      vim.lsp.config('phpactor', servers['phpactor'])
       require('mason-lspconfig').setup {
         ensure_installed = ensure_installed,
 
