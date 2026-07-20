@@ -141,6 +141,16 @@ vim.o.timeoutlen = 300
 vim.o.splitright = true
 vim.o.splitbelow = true
 
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'vue', 'json', 'css', 'scss', 'html', 'yaml' },
+  callback = function()
+    vim.bo.expandtab = true
+    vim.bo.tabstop = 2
+    vim.bo.softtabstop = 2
+    vim.bo.shiftwidth = 2
+  end,
+})
+
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
@@ -209,9 +219,9 @@ vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Scroll up and center' })
 vim.keymap.set('v', '<C-r>', '"hy:%s/<C-r>h//gc<left><left><left>', { desc = 'Search and replace visual selection' })
 
 -- Diagnostics
-vim.keymap.set('n', '<leader>de', vim.diagnostic.open_float,
+vim.keymap.set('n', '<leader>ie', vim.diagnostic.open_float,
   { noremap = true, silent = true, desc = 'Show diagnostic [E]rror' })
-vim.keymap.set('n', '<leader>dq', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '<leader>iq', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 
 
@@ -356,7 +366,8 @@ require('lazy').setup({
       -- Document existing key chains
       spec = {
         { '<leader>c', group = '[C]ode',                mode = { 'n', 'x' } },
-        { '<leader>d', group = '[D]iagnostics' },
+        { '<leader>i', group = 'D[i]agnostics' },
+        { '<leader>d', group = '[D]atabase' },
         { '<leader>e', group = '[E]xplorer' },
         { '<leader>l', group = '[L]azygit' },
         { '<leader>m', group = '[M]ark' },
@@ -830,6 +841,11 @@ require('lazy').setup({
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
+      vim.list_extend(ensure_installed, {
+        'php-cs-fixer',
+        'prettier',
+        'prettierd',
+      })
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -854,24 +870,79 @@ require('lazy').setup({
   { -- Autoformat
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
-    cmd = { 'ConformInfo' },
+    cmd = { 'ConformInfo', 'Format' },
     keys = {
       {
         '<leader>f',
         function()
+          local eslint_filetypes = {
+            javascript = true,
+            javascriptreact = true,
+            typescript = true,
+            typescriptreact = true,
+            vue = true,
+          }
+
+          if eslint_filetypes[vim.bo.filetype] then
+            vim.cmd 'EslintFixAll'
+            return
+          end
+
           require('conform').format { async = true, lsp_format = 'fallback' }
         end,
         mode = '',
         desc = '[F]ormat buffer',
       },
     },
+    config = function(_, opts)
+      require('conform').setup(opts)
+
+      vim.api.nvim_create_user_command('Format', function(args)
+        local eslint_filetypes = {
+          javascript = true,
+          javascriptreact = true,
+          typescript = true,
+          typescriptreact = true,
+          vue = true,
+        }
+
+        if eslint_filetypes[vim.bo.filetype] then
+          vim.cmd 'EslintFixAll'
+          return
+        end
+
+        local range = nil
+        if args.count ~= -1 then
+          local end_line = vim.api.nvim_buf_get_lines(0, args.line2 - 1, args.line2, true)[1]
+          range = {
+            start = { args.line1, 0 },
+            ['end'] = { args.line2, end_line:len() },
+          }
+        end
+
+        require('conform').format {
+          async = true,
+          lsp_format = 'fallback',
+          range = range,
+        }
+      end, { range = true })
+    end,
     opts = {
       notify_on_error = true,
       format_on_save = function(bufnr)
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true, lua = true }
+        local disable_filetypes = {
+          c = true,
+          cpp = true,
+          lua = true,
+          javascript = true,
+          javascriptreact = true,
+          typescript = true,
+          typescriptreact = true,
+          vue = true,
+        }
         if disable_filetypes[vim.bo[bufnr].filetype] then
           return nil
         else
@@ -882,15 +953,15 @@ require('lazy').setup({
         end
       end,
       formatters_by_ft = {
-        php = { "php-cs-fixer" },
+        php = { 'php-cs-fixer' },
       },
       formatters = {
-        ["php-cs-fixer"] = {
-          command = "php-cs-fixer",
+        ['php-cs-fixer'] = {
+          command = 'php-cs-fixer',
           args = {
-            "fix",
-            "--rules=@PSR12", -- Formatting preset. Other presets are available, see the php-cs-fixer docs.
-            "$FILENAME",
+            'fix',
+            '--rules=@PSR12', -- Formatting preset. Other presets are available, see the php-cs-fixer docs.
+            '$FILENAME',
           },
           stdin = false,
         },
